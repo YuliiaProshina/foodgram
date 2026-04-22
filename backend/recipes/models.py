@@ -99,28 +99,53 @@ class RecipeIngredient(models.Model):
 
 
 class FavoriteRecipe(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorite_recipes')
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='favorite_recipes')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites')
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='favorites')
 
     class Meta:
         constraints = [
             models.UniqueConstraint(
                 fields=('user', 'recipe'),
-                name='unique_favorite_recipes'
+                name='unique_favorites'
             )
         ]
 
 
 class ShoppingCart(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='shopping_carts')
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='shopping_carts')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='shopping_cart')
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='shopping_cart')
 
     class Meta:
         constraints = [
             models.UniqueConstraint(
                 fields=('user', 'recipe'),
-                name='unique_shopping_carts'
+                name='unique_shopping_cart'
             )
         ]
+
+
+class Subscription(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='subscriptions'
+    )
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='subscribers'
+    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=('user', 'author'),
+                name='unique_subscriptions'
+            )
+        ]
+
+    def __str__(self):
+        return f'{self.user} подписан на {self.author}'
+
 
 
