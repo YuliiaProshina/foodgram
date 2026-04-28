@@ -1,18 +1,11 @@
 import base64
 
 from django.core.files.base import ContentFile
+from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
-from rest_framework.pagination import LimitOffsetPagination
-from rest_framework.relations import SlugRelatedField
-from rest_framework.validators import UniqueTogetherValidator
-from djoser.serializers import UserSerializer, UserCreateSerializer
-from django.contrib.auth import get_user_model
 
-from recipes.models import Recipe, Ingredient, Tag, User, Subscription, RecipeIngredient
-
-
-
-
+from recipes.models import (Ingredient, Recipe, RecipeIngredient, Subscription,
+                            Tag, User)
 
 
 class Base64ImageField(serializers.ImageField):
@@ -35,9 +28,8 @@ class AvatarSerializer(serializers.ModelSerializer):
 class CustomUserCreateSerializer(UserCreateSerializer):
     class Meta:
         model = User
-        fields = ('email', 'id', 'username', 'first_name', 'last_name', 'password')
-
-
+        fields = ('email', 'id', 'username',
+                  'first_name', 'last_name', 'password')
 
 
 class CustomUserSerializer(UserSerializer):
@@ -46,20 +38,21 @@ class CustomUserSerializer(UserSerializer):
 
     class Meta:
         model = User
-        fields = ('email', 'id', 'username', 'first_name', 'last_name', 'is_subscribed', 'avatar')
+        fields = ('email', 'id', 'username', 'first_name',
+                  'last_name', 'is_subscribed', 'avatar')
 
     def get_is_subscribed(self, obj):
         request = self.context.get('request')
         if request is None or request.user.is_anonymous:
             return False
-        return Subscription.objects.filter(user=request.user, author=obj).exists()
+        return Subscription.objects.filter(user=request.user,
+                                           author=obj).exists()
 
 
 class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredient
         fields = ('id', 'name', 'measurement_unit')
-
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -74,10 +67,10 @@ class RecipeIngredientReadSerializer(serializers.ModelSerializer):
     measurement_unit = serializers.ReadOnlyField(
         source='ingredient.measurement_unit'
     )
+
     class Meta:
         model = RecipeIngredient
         fields = ('id', 'name', 'measurement_unit', 'amount')
-        #read_only_fields = ('id', 'name', 'measurement_unit', 'amount')
 
 
 class RecipeIngredientWriteSerializer(serializers.ModelSerializer):
@@ -85,10 +78,10 @@ class RecipeIngredientWriteSerializer(serializers.ModelSerializer):
         queryset=Ingredient.objects.all(),
         source='ingredient'
     )
+
     class Meta:
         model = RecipeIngredient
         fields = ('id', 'amount')
-
 
 
 class RecipeReadSerializer(serializers.ModelSerializer):
@@ -200,21 +193,22 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         tags = attrs.get('tags')
         cooking_time = attrs.get('cooking_time')
         if not ingredients:
-            raise serializers.ValidationError('Нужно указать хотя бы один ингредиент.')
+            raise serializers.ValidationError('Нужно указать'
+                                              ' хотя бы один ингредиент.')
         if not tags:
-            raise serializers.ValidationError('Нужно указать хотя бы один тег.')
+            raise serializers.ValidationError('Нужно указать '
+                                              'хотя бы один тег.')
         if cooking_time is None or cooking_time <= 0:
-            raise serializers.ValidationError('Время приготовления должно быть больше нуля.')
+            raise serializers.ValidationError('Время приготовления'
+                                              ' должно быть больше нуля.')
         ingredient_ids = []
         for item in ingredients:
             ingredient = item['ingredient']
             amount = item['amount']
-
             if amount <= 0:
                 raise serializers.ValidationError(
                     'Количество ингредиента должно быть больше нуля.'
                 )
-
             if ingredient.id in ingredient_ids:
                 raise serializers.ValidationError(
                     'Ингредиенты не должны повторяться.'
@@ -223,7 +217,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         tag_ids = [tag.id for tag in tags]
         if len(tag_ids) != len(set(tag_ids)):
             raise serializers.ValidationError(
-               'Теги не должны повторяться.'
+                'Теги не должны повторяться.'
             )
         return attrs
 
@@ -270,9 +264,3 @@ class SubscriptionSerializer(serializers.ModelSerializer):
 
     def get_recipes_count(self, obj):
         return obj.recipes.count()
-
-
-
-
-
-

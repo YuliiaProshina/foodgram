@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Recipe, Tag, Ingredient, RecipeIngredient
+
+from .models import Ingredient, Recipe, RecipeIngredient, Tag
 
 
 class RecipeIngredientInline(admin.TabularInline):
@@ -16,6 +17,7 @@ class RecipeAdmin(admin.ModelAdmin):
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
     list_display = [field.name for field in Ingredient._meta.fields]
+
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
