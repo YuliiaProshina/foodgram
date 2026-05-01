@@ -2,10 +2,9 @@ import base64
 
 from django.core.files.base import ContentFile
 from djoser.serializers import UserCreateSerializer, UserSerializer
-from rest_framework import serializers
-
 from recipes.models import (Ingredient, Recipe, RecipeIngredient, Subscription,
                             Tag, User)
+from rest_framework import serializers
 
 
 class Base64ImageField(serializers.ImageField):
