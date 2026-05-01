@@ -15,11 +15,11 @@ class User(AbstractUser):
                                 validators=[username_validator],)
     first_name = models.CharField('Имя', max_length=150)
     last_name = models.CharField('Фамилия', max_length=150)
-    password = models.CharField('Пароль', max_length=150)
+    #password = models.CharField('Пароль', max_length=150)
     avatar = models.ImageField('Аватарка', upload_to='users/images/',
                                default=None)
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'password']
+    REQUIRED_FIELDS = ['username']
 
     class Meta:
         verbose_name = 'Пользователь'
