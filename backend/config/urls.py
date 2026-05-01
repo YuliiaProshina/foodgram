@@ -2,11 +2,19 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
+from django.shortcuts import redirect
+from recipes.models import Recipe
+
+
+def redirect_short_link(request, pk):
+    recipe = Recipe.objects.get(pk=pk)
+    return redirect(f'/recipes/{recipe.id}/')
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
-    path('s/', include('shortener.urls')),
+    path('s/<int:pk>/', redirect_short_link),
 ]
 
 if settings.DEBUG:
