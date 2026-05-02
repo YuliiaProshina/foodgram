@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .models import Ingredient, Recipe, RecipeIngredient, Tag, User
+from .models import Ingredient, Recipe, RecipeIngredient, Tag, User, FavoriteRecipe
 
 
 @admin.register(User)
@@ -25,7 +25,7 @@ class RecipeAdmin(admin.ModelAdmin):
 
     @admin.display(description='В избранном')
     def favorites_count(self, obj):
-        return obj.favorites.count()
+        return FavoriteRecipe.objects.filter(recipe=obj).count()
 
 
 @admin.register(Ingredient)
