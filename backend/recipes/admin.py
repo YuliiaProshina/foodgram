@@ -1,6 +1,13 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 
-from .models import Ingredient, Recipe, RecipeIngredient, Tag
+from .models import Ingredient, Recipe, RecipeIngredient, Tag, User
+
+
+@admin.register(User)
+class CustomUserAdmin(UserAdmin):
+    list_display = ('id', 'email', 'username', 'first_name', 'last_name')
+    search_fields = ('email', 'username', 'first_name', 'last_name')
 
 
 class RecipeIngredientInline(admin.TabularInline):
@@ -11,9 +18,14 @@ class RecipeIngredientInline(admin.TabularInline):
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'author')
+    list_display = ('id', 'name', 'author', 'favorites_count')
+    search_fields = ('name', 'author__username', 'author__email')
+    list_filter = ('tags',)
     inlines = (RecipeIngredientInline,)
-    search_fields = ('name',)
+
+    @admin.display(description='В избранном')
+    def favorites_count(self, obj):
+        return obj.favorite_recipes.count()
 
 
 @admin.register(Ingredient)
@@ -24,4 +36,4 @@ class IngredientAdmin(admin.ModelAdmin):
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
-    list_display = [field.name for field in Tag._meta.fields]
+    list_display = ('id', 'name', 'slug')
