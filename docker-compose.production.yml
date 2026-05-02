@@ -14,20 +14,20 @@ services:
     image: yuliaproshina/foodgram_backend
     env_file: .env
     volumes:
-      - static_volume:/app/static_foodgram
+      - django_static_volume:/app/static_foodgram
       - media_volume:/app/media
   frontend:
     image: yuliaproshina/foodgram_frontend
     env_file: .env
     command: cp -r /app/build/. /frontend_static/
     volumes:
-      - static_volume:/frontend_static
+      - frontend_static_volume:/frontend_static
   gateway:
     image: yuliaproshina/foodgram_gateway
     env_file: .env
     volumes:
-      - frontend_static_volume:/frontend_static
       - django_static_volume:/static_foodgram
+      - frontend_static_volume:/frontend_static
       - media_volume:/media
     ports:
       - 7000:80
