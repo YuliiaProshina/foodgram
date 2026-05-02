@@ -187,7 +187,7 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     """Вьюсет для работы с ингредиентами."""
     serializer_class = IngredientSerializer
     permission_classes = (AllowAny,)
-    pagination_class = None
+    pagination_class = LimitOffsetPagination
 
     def get_queryset(self):
         queryset = Ingredient.objects.all()
