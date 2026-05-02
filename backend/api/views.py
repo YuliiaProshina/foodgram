@@ -44,7 +44,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     """
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
                           IsAuthorOrReadOnly)
-    pagination_class = LimitOffsetPagination
+    pagination_class = CustomPagination
 
     def get_queryset(self):
         queryset = Recipe.objects.all()
@@ -187,7 +187,7 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     """Вьюсет для работы с ингредиентами."""
     serializer_class = IngredientSerializer
     permission_classes = (AllowAny,)
-    pagination_class = LimitOffsetPagination
+    pagination_class = None
 
     def get_queryset(self):
         queryset = Ingredient.objects.all()
