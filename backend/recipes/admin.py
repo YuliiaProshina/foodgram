@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .models import Ingredient, Recipe, RecipeIngredient, Tag, User, FavoriteRecipe
+from .models import (FavoriteRecipe, Ingredient, Recipe, RecipeIngredient, Tag,
+                     User)
 
 
 @admin.register(User)
@@ -37,5 +38,3 @@ class IngredientAdmin(admin.ModelAdmin):
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'slug')
-
-
