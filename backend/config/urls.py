@@ -1,14 +1,14 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import include, path
 
 from recipes.models import Recipe
 
 
 def redirect_short_link(request, pk):
-    recipe = Recipe.objects.get(pk=pk)
+    recipe = get_object_or_404(Recipe, pk=pk)
     return redirect(f'/recipes/{recipe.id}/')
 
 

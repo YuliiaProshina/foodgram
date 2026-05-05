@@ -1,6 +1,9 @@
 from rest_framework.pagination import PageNumberPagination
 
+from backend.config import settings
+
 
 class CustomPagination(PageNumberPagination):
-    page_size = 6
+    """Кастомная пагинация для API."""
+    page_size = settings.PAGE_SIZE
     page_size_query_param = 'limit'

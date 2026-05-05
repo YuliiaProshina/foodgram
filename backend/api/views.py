@@ -7,15 +7,15 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from recipes.models import (FavoriteRecipe, Ingredient, Recipe,
-                            RecipeIngredient, ShoppingCart, Subscription, Tag,
-                            User)
-
+                            ShoppingCart, Subscription, Tag, User)
 from .pagination import CustomPagination
 from .permissions import IsAuthorOrReadOnly
-from .serializers import (AvatarSerializer, CustomUserSerializer,
-                          IngredientSerializer, RecipeReadSerializer,
-                          RecipeShortSerializer, RecipeWriteSerializer,
-                          SubscriptionSerializer, TagSerializer)
+from .serializers import (AvatarSerializer, IngredientSerializer,
+                          RecipeReadSerializer, RecipeShortSerializer,
+                          RecipeWriteSerializer, ShoppingCartSerializer,
+                          SubscriptionSerializer, TagSerializer,
+                          UserWithSubscriptionSerializer)
+from .utils import create_shopping_cart_text
 
 
 class CurrentUserView(APIView):
@@ -23,7 +23,7 @@ class CurrentUserView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
-        serializer = CustomUserSerializer(
+        serializer = UserWithSubscriptionSerializer(
             request.user,
             context={'request': request}
         )
@@ -92,26 +92,26 @@ class RecipeViewSet(viewsets.ModelViewSet):
     )
     def shopping_cart(self, request, pk=None):
         recipe = get_object_or_404(Recipe, pk=pk)
-        user = request.user
         if request.method == 'POST':
-            if ShoppingCart.objects.filter(user=user, recipe=recipe).exists():
-                return Response(
-                    {'errors': 'Рецепт уже добавлен.'},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-            ShoppingCart.objects.create(user=user,
-                                        recipe=recipe)
-            serializer = RecipeShortSerializer(recipe,
-                                               context={'request': request})
+            serializer = ShoppingCartSerializer(
+                data={
+                    'user': request.user.id,
+                    'recipe': recipe.id,
+                },
+                context={'request': request}
+            )
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        shopping_cart_items = ShoppingCart.objects.filter(user=user,
-                                                          recipe=recipe)
-        if not shopping_cart_items.exists():
+        deleted_count = ShoppingCart.objects.filter(
+            user=request.user,
+            recipe=recipe
+        ).delete()
+        if not deleted_count:
             return Response(
                 {'errors': 'Рецепта нет в корзине.'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        shopping_cart_items.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
@@ -121,24 +121,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
         url_path='download_shopping_cart'
     )
     def download_shopping_cart(self, request, pk=None):
-        ingredients = RecipeIngredient.objects.filter(
-            recipe__shopping_cart__user=request.user)
-        result = {}
-        for ingredient in ingredients:
-            name = ingredient.ingredient.name
-            unit = ingredient.ingredient.measurement_unit
-            if name not in result:
-                result[name] = {
-                    'amount': 0,
-                    'unit': unit,
-                }
-            result[name]['amount'] += ingredient.amount
-        text = 'Список покупок:'
-        for name, data in result.items():
-            text += f'\n{name}: {data["amount"]} {data["unit"]}'
+        text = create_shopping_cart_text(request.user)
+
         response = HttpResponse(text, content_type='text/plain')
-        response['Content-Disposition'] = ('attachment; '
-                                           'filename="shopping_cart.txt"')
+        response['Content-Disposition'] = (
+            'attachment; filename="shopping_cart.txt"'
+        )
         return response
 
     @action(

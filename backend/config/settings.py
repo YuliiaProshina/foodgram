@@ -130,3 +130,5 @@ DJOSER = {
         'set_password': ['rest_framework.permissions.IsAuthenticated'],
     },
 }
+
+PAGE_SIZE = int(os.getenv('PAGE_SIZE', 6))

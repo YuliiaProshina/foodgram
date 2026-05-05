@@ -2,6 +2,10 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
 from django.db import models
 
+from backend.recipes.constants import (MAX_EMAIL_LENGTH, MAX_USERNAME_LENGTH,
+                                       MAX_NAME_LENGTH, MAX_MEASURE_LENGTH,
+                                       MAX_RECIPE_NAME_LENGTH, MAX_TEXT_LENGTH)
+
 username_validator = RegexValidator(
     regex=r'^[\w.@+-]+\Z',
     message='Логин может содержать только буквы, цифры и символы @/./+/-/_'
@@ -10,15 +14,16 @@ username_validator = RegexValidator(
 
 class User(AbstractUser):
     """Модель для создания пользователей."""
-    email = models.EmailField('Электронная почта', max_length=254, unique=True)
-    username = models.CharField('Логин', max_length=150, unique=True,
-                                validators=[username_validator],)
-    first_name = models.CharField('Имя', max_length=150)
-    last_name = models.CharField('Фамилия', max_length=150)
+    email = models.EmailField('Электронная почта',
+                              max_length=MAX_EMAIL_LENGTH, unique=True)
+    username = models.CharField('Логин', max_length=MAX_USERNAME_LENGTH,
+                                unique=True, validators=[username_validator],)
+    first_name = models.CharField('Имя', max_length=MAX_USERNAME_LENGTH)
+    last_name = models.CharField('Фамилия', max_length=MAX_USERNAME_LENGTH)
     avatar = models.ImageField('Аватарка', upload_to='users/images/',
                                default=None)
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    REQUIRED_FIELDS = ('username')
 
     class Meta:
         verbose_name = 'Пользователь'
@@ -31,9 +36,9 @@ class User(AbstractUser):
 
 class Tag(models.Model):
     """Модель для создания тегов."""
-    name = models.CharField(max_length=100, unique=True,
-                            verbose_name='Название тега')
-    slug = models.SlugField(max_length=100, unique=True, verbose_name='Слаг')
+    name = models.CharField('Название тега', max_length=MAX_NAME_LENGTH,
+                            unique=True,)
+    slug = models.SlugField('Слаг', max_length=MAX_NAME_LENGTH, unique=True)
 
     class Meta:
         verbose_name = 'Тег'
@@ -45,8 +50,9 @@ class Tag(models.Model):
 
 class Ingredient(models.Model):
     """Модель для создания ингредиентов."""
-    name = models.CharField('Название ингредиента', max_length=100)
-    measurement_unit = models.CharField('Единица измерения', max_length=50)
+    name = models.CharField('Название ингредиента', max_length=MAX_NAME_LENGTH)
+    measurement_unit = models.CharField('Единица измерения',
+                                        max_length=MAX_MEASURE_LENGTH)
 
     class Meta:
         verbose_name = 'Ингредиент'
@@ -72,15 +78,18 @@ class Recipe(models.Model):
         related_name='recipes',
         verbose_name='Ингредиенты'
     )
-    name = models.CharField('Название рецепта', max_length=256)
+    name = models.CharField('Название рецепта',
+                            max_length=MAX_RECIPE_NAME_LENGTH)
     image = models.ImageField('Изображение рецепта',
                               upload_to='recipe/images/', default=None)
-    text = models.TextField('Описание рецепта', max_length=1000)
+    text = models.TextField('Описание рецепта', max_length=MAX_TEXT_LENGTH)
     cooking_time = models.PositiveIntegerField(default=1)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
+        ordering = ('-created_at',)
 
     def __str__(self):
         return self.name
