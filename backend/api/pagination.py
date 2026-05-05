@@ -1,6 +1,6 @@
 from rest_framework.pagination import PageNumberPagination
 
-from backend.config import settings
+from config.settings import settings
 
 
 class CustomPagination(PageNumberPagination):

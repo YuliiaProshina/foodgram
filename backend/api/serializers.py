@@ -5,7 +5,7 @@ from django.core.files.base import ContentFile
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
 
-from backend.recipes.models import ShoppingCart
+from recipes.models import ShoppingCart
 from recipes.models import (Ingredient, Recipe, RecipeIngredient, Subscription,
                             Tag, User)
 
