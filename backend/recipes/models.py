@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
 from django.db import models
 
-from backend.recipes.constants import (MAX_EMAIL_LENGTH, MAX_USERNAME_LENGTH,
+from recipes.constants import (MAX_EMAIL_LENGTH, MAX_USERNAME_LENGTH,
                                        MAX_NAME_LENGTH, MAX_MEASURE_LENGTH,
                                        MAX_RECIPE_NAME_LENGTH, MAX_TEXT_LENGTH)
 
