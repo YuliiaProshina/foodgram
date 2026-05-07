@@ -15,7 +15,7 @@ services:
     volumes:
       - static:/app/static_foodgram
       - media:/app/media
-      - ../data:/app/data
+      - ./data:/app/data
     depends_on:
       - db
 
