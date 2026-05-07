@@ -83,7 +83,8 @@ class Recipe(models.Model):
     image = models.ImageField('Изображение рецепта',
                               upload_to='recipe/images/', default=None)
     text = models.TextField('Описание рецепта', max_length=MAX_TEXT_LENGTH)
-    cooking_time = models.PositiveIntegerField('Время приготовления', default=1)
+    cooking_time = models.PositiveIntegerField('Время приготовления',
+                                               default=1)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
