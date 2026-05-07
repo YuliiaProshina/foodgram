@@ -15,6 +15,7 @@ services:
     volumes:
       - static_volume:/app/static_foodgram
       - media_volume:/app/media
+      - ./data:/app/data
   frontend:
     image: yuliaproshina/foodgram_frontend
     env_file: .env
