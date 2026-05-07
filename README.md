@@ -229,42 +229,23 @@ name,slug
 Ужин,dinner
 ```
 
-## Импорт ингредиентов
+## Импорт ингредиентов и тегов
 ## Локально
 
 ```python
-python manage.py import_ingredients
+python manage.py import_data
 ```
 
 ## В Docker
 
 ```python
-docker compose exec backend python manage.py import_ingredients
+docker compose exec backend python manage.py import_data
 ```
 
 ## На сервере
 
 ```python
-sudo docker compose -f docker-compose.production.yml exec backend python manage.py import_ingredients
-```
-
-## Импорт тегов
-## Локально
-
-```python
-python manage.py import_tags
-```
-
-## В Docker
-
-```python
-docker compose exec backend python manage.py import_tags
-```
-
-## На сервере
-
-```python
-sudo docker compose -f docker-compose.production.yml exec backend python manage.py import_tags
+sudo docker compose -f docker-compose.production.yml exec backend python manage.py import_data
 ```
 
 ## Автор
