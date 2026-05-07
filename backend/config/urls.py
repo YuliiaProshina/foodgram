@@ -15,7 +15,7 @@ def redirect_short_link(request, pk):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
-    path('s/<int:pk>/', redirect_short_link),
+    path('s/<int:pk>/', redirect_short_link, name='short-link'),
 ]
 
 if settings.DEBUG:
