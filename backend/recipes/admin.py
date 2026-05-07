@@ -60,12 +60,8 @@ class SubscriptionAdmin(admin.ModelAdmin):
     search_fields = ('user__email', 'author__email')
 
 
-try:
-    admin.site.unregister(Group)
-except admin.sites.NotRegistered:
-    pass
+admin.site.unregister(Group)
 
-try:
-    admin.site.unregister(TokenProxy)
-except admin.sites.NotRegistered:
-    pass
+
+admin.site.unregister(User)
+
