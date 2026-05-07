@@ -83,7 +83,7 @@ class Recipe(models.Model):
     image = models.ImageField('Изображение рецепта',
                               upload_to='recipe/images/', default=None)
     text = models.TextField('Описание рецепта', max_length=MAX_TEXT_LENGTH)
-    cooking_time = models.PositiveIntegerField(default=1)
+    cooking_time = models.PositiveIntegerField('Время приготовления', default=1)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -101,7 +101,10 @@ class RecipeIngredient(models.Model):
         Recipe, on_delete=models.CASCADE, related_name='recipe_ingredients'
     )
     ingredient = models.ForeignKey(
-        Ingredient, on_delete=models.CASCADE, related_name='recipe_ingredients'
+        Ingredient,
+        on_delete=models.CASCADE,
+        related_name='recipe_ingredients',
+        verbose_name='Ингредиенты'
     )
     amount = models.PositiveIntegerField('Количество', default=1)
 
