@@ -90,8 +90,15 @@ class RecipeViewSet(viewsets.ModelViewSet):
         permission_classes=(IsAuthenticated,),
         url_path='shopping_cart'
     )
+    @action(
+        detail=True,
+        methods=('post', 'delete'),
+        permission_classes=(IsAuthenticated,),
+        url_path='shopping_cart'
+    )
     def shopping_cart(self, request, pk=None):
         recipe = get_object_or_404(Recipe, pk=pk)
+
         if request.method == 'POST':
             serializer = ShoppingCartSerializer(
                 data={
@@ -102,16 +109,21 @@ class RecipeViewSet(viewsets.ModelViewSet):
             )
             serializer.is_valid(raise_exception=True)
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        deleted_count = ShoppingCart.objects.filter(
+            return Response(
+                serializer.data,
+                status=status.HTTP_201_CREATED
+            )
+        shopping_cart = ShoppingCart.objects.filter(
             user=request.user,
             recipe=recipe
-        ).delete()
-        if not deleted_count:
+        )
+
+        if not shopping_cart.exists():
             return Response(
-                {'errors': 'Рецепта нет в корзине.'},
+                {'errors': 'Рецепта нет в списке покупок.'},
                 status=status.HTTP_400_BAD_REQUEST
             )
+        shopping_cart.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
