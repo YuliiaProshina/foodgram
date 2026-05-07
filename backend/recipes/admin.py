@@ -63,5 +63,5 @@ class SubscriptionAdmin(admin.ModelAdmin):
 admin.site.unregister(Group)
 
 
-admin.site.unregister(User)
+admin.site.unregister(TokenProxy)
 
