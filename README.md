@@ -10,58 +10,59 @@ Django, Python, Django REST Framework, Djoser, Redoc, Nginx, Gunicorn, PostgreSQ
 
 Клонировать репозиторий и перейти в него в командной строке:
 
-```
+```python
 git clone https://github.com/YuliiaProshina/foodgram.git
 ```
 
-```
+```python
 cd backend
 ```
 
 Cоздать и активировать виртуальное окружение:
 
-```
+```python
 python3 -m venv env
 ```
 
 * Если у вас Linux/macOS
 
-    ```
+    ```python
     source env/bin/activate
     ```
 
 * Если у вас windows
 
-    ```
+    ```python
     source env/scripts/activate
     ```
 
-```
+```python
 python3 -m pip install --upgrade pip
 ```
 
 Установить зависимости из файла requirements.txt:
 
-```
+```python
 pip install -r requirements.txt
 ```
 
 Выполнить миграции:
 
-```
+```python
 python3 manage.py migrate
 ```
 
 Запустить проект:
 
-```
+```python
 python3 manage.py runserver
 ```
 ### Как запустить проект через Docker:
 
-```
+```python
 cd foodgram
 ```
+```python
 docker compose up --build
 ```
 Приложение будет доступно:
@@ -119,7 +120,7 @@ docker compose up --build
 ```
 
 Успешный ответ, код 201:
-```
+```python
 {
   "id": 0,
   "tags": [
@@ -155,7 +156,7 @@ docker compose up --build
 }
 ```
 Негативный ответ при отсутствии обязательного поля, код 400:
-```
+```python
 {
   "field_name": [
     "Обязательное поле."
@@ -188,12 +189,83 @@ docker compose up --build
 ```
 
 Негативный ответ при отсутствии обязательного поля, код 400:
-```
+```python
 {
   "field_name": [
     "Обязательное поле."
   ]
 }
 ```
+
+## Импорт ингредиентов и тегов
+
+Проект поддерживает импорт ингредиентов и тегов из CSV-файлов через Django management commands.
+
+### Структура файлов
+
+Файлы должны находиться в папке:
+
+```text
+data/
+|--ingredients.csv
+|--tags.csv
+```
+
+## Формат ingredients.csv
+
+```text
+name,measurement_unit
+Молоко,мл
+Соль,г
+Мука,г
+```
+
+## Формат tags.csv
+
+```text
+name,slug
+Завтрак,breakfast
+Обед,lunch
+Ужин,dinner
+```
+
+## Импорт ингредиентов
+## Локально
+
+```python
+python manage.py import_ingredients
+```
+
+## В Docker
+
+```python
+docker compose exec backend python manage.py import_ingredients
+```
+
+## На сервере
+
+```python
+sudo docker compose -f docker-compose.production.yml exec backend python manage.py import_ingredients
+```
+
+## Импорт тегов
+## Локально
+
+```python
+python manage.py import_tags
+```
+
+## В Docker
+
+```python
+docker compose exec backend python manage.py import_tags
+```
+
+## На сервере
+
+```python
+sudo docker compose -f docker-compose.production.yml exec backend python manage.py import_tags
+```
+
 ## Автор
 Прошина Юлия - студент Яндекс.Практикума
