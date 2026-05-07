@@ -117,12 +117,16 @@ class RecipeIngredient(models.Model):
 
 class FavoriteRecipe(models.Model):
     """Модель для добавления рецептов в избранное."""
-    user = models.ForeignKey(User, on_delete=models.CASCADE,
-                             related_name='favorites')
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='favorites',
+        verbose_name='Пользователь')
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE,
-                               related_name='favorites')
+                               related_name='favorites', verbose_name='Рецепт')
 
     class Meta:
+        verbose_name = 'Рецепты в избранном'
         constraints = [
             models.UniqueConstraint(
                 fields=('user', 'recipe'),
@@ -133,12 +137,21 @@ class FavoriteRecipe(models.Model):
 
 class ShoppingCart(models.Model):
     """Модель для создания корзины покупок пользователя."""
-    user = models.ForeignKey(User, on_delete=models.CASCADE,
-                             related_name='shopping_cart')
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE,
-                               related_name='shopping_cart')
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='shopping_cart',
+        verbose_name='Пользователь'
+    )
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name='shopping_cart',
+        verbose_name='Рецепт'
+    )
 
     class Meta:
+        verbose_name = 'Корзина покупок'
         constraints = [
             models.UniqueConstraint(
                 fields=('user', 'recipe'),
@@ -152,15 +165,19 @@ class Subscription(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='subscriptions'
+        related_name='subscriptions',
+        verbose_name='Пользователь'
     )
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='subscribers'
+        related_name='subscribers',
+        verbose_name='Автор'
     )
 
     class Meta:
+        verbose_name = 'Подписчик',
+        verbose_name_plural = 'Подписчики'
         constraints = [
             models.UniqueConstraint(
                 fields=('user', 'author'),
