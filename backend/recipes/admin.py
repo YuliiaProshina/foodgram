@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group
+from django.contrib.admin.sites import NotRegistered
+from rest_framework.authtoken.models import Token
 
 from .models import (FavoriteRecipe, Ingredient, Recipe, RecipeIngredient,
                      ShoppingCart, Subscription, Tag, User)
@@ -61,5 +63,10 @@ class SubscriptionAdmin(admin.ModelAdmin):
 
 
 admin.site.unregister(Group)
+
+try:
+    admin.site.unregister(Token)
+except NotRegistered:
+    pass
 
 
