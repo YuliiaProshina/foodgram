@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group
-from rest_framework.authtoken.models import TokenProxy
 
 from .models import (FavoriteRecipe, Ingredient, Recipe, RecipeIngredient,
                      ShoppingCart, Subscription, Tag, User)
@@ -62,6 +61,3 @@ class SubscriptionAdmin(admin.ModelAdmin):
 
 
 admin.site.unregister(Group)
-
-if TokenProxy in admin.site._registry:
-    admin.site.unregister(TokenProxy)
