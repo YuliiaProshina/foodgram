@@ -3,8 +3,16 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import include, path
+from django.contrib.admin.sites import NotRegistered
+from rest_framework.authtoken.models import Token, TokenProxy
 
 from recipes.models import Recipe
+
+try:
+    admin.site.unregister(Token)
+    admin.site.unregister(TokenProxy)
+except NotRegistered:
+    pass
 
 
 def redirect_short_link(request, pk):
