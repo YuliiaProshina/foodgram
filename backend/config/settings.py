@@ -20,7 +20,7 @@ INSTALLED_APPS = [
     'api',
     'recipes',
     'rest_framework',
-    'rest_framework_simplejwt',
+    'rest_framework.authtoken',
     'djoser',
 ]
 
@@ -101,9 +101,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ],
-
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 6,
 }
