@@ -64,7 +64,6 @@ class SubscriptionAdmin(admin.ModelAdmin):
 admin.site.unregister(Group)
 
 
-try:
-    admin.site.unregister(TokenProxy)
-except admin.sites.NotRegistered:
-    pass
+admin.site._registry.pop(TokenProxy, None)
+
+
